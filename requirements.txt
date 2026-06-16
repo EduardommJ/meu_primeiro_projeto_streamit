@@ -2,4 +2,4 @@ pandas
 plotly
 streamlit
 google-cloud-storage
-pillow
+Pillow
