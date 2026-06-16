@@ -1,17 +1,25 @@
 import streamlit as st
-import pandas as pd
-import plotly.express as px
-# Dados de exemplo
-df = pd.DataFrame({
-"Mês": ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"],
-"Vendas": [120, 145, 98, 200, 175, 230],
-"Clientes": [40, 55, 35, 80, 70, 95],
-})
+from google.cloud import storage
+from PIL import Image
+from io import BytesIO
 
-st.title("Dashboard de Teste")
+# Cliente autenticado
+client = storage.Client.from_service_account_info(
+    st.secrets["gcp_service_account"]
+)
 
-st.header("Olá meu nome é Suzana")
+bucket_nome = "bucket-copa"
+arquivo = "imagens_jogadores/imagem_20.jpg"
 
-st.write("Esse é um texto simples")
+bucket = client.bucket(bucket_nome)
+blob = bucket.blob(arquivo)
 
-st.dataframe(df, use_container_width =True)
+imagem_bytes = blob.download_as_bytes()
+
+imagem = Image.open(BytesIO(imagem_bytes))
+
+st.image(
+    imagem,
+    caption="Imagem do Datalake - Google Cloud Storage"
+)
+
